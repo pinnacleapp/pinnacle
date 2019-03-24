@@ -3,13 +3,13 @@ var router = express.Router();
 const moment = require('moment')
 const alpha = require('alphavantage')({ key: "0HPBN1UWP7ZZNIGS" })
 const https = require('https');
-//const tweetUtil = require('../controllers/tweet');
+const tweet = require('../controllers/tweet');
 
 
 router.get('/', (req, res, next) => {
   res.render("index", { title: "raw" });
 })
-router.get('/getstocks', function(req, res, next) {
+router.get('/getstocks', function (req, res, next) {
   let stockData = {}
   console.log(req.query.stock);
   alpha.data.intraday(req.query.stock).then(data => {
@@ -51,7 +51,7 @@ router.get('/getstocks', function(req, res, next) {
         stockData.yx = stockData.weeklyx.slice(-52)
         stockData.yy = stockData.weeklyy.slice(-52)
         delete stockData.intraday;
-        res.json({yx: stockData.yx, yy: stockData.yy});
+        res.json({ yx: stockData.yx, yy: stockData.yy });
       });
     });
 
@@ -59,8 +59,9 @@ router.get('/getstocks', function(req, res, next) {
 
 });
 
-router.get("/stock", (req, res, next) => {
-  res.render("stock", { stock: req.query.stock });
+router.get("/stock", async (req, res, next) => {
+  tweetVar = await tweet.getTweets(req.query.stock);
+  res.render("stock", { stock: req.query.stock, tweet: tweetVar });
 })
 
 module.exports = router;

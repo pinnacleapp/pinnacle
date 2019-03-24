@@ -9,9 +9,6 @@
     }
     body {
         height: 100%;
-        -webkit-box-shadow: 10px 21px 98px -11px rgba(0,0,0,0.31);
-        -moz-box-shadow: 10px 21px 98px -11px rgba(0,0,0,0.31);
-        box-shadow: 10px 21px 98px -11px rgba(0,0,0,0.31);
     }
     #form {
         display: block;
@@ -26,9 +23,19 @@
         font-size: 4em;
         color: white;
     }
-    canvas {
+    
+  canvas {
         display: block;
+        float: left;
+        width: auto;
+        margin: 0 !important;
+        position:fixed
     }
+
+    #tweets {
+        width: auto;
+        float: right;
+        }
 
     .logo {
         margin-bottom: 5%;
@@ -42,10 +49,36 @@
     }
 
 </style>
-<div class="logo">
-    {{stock}}
+<div style="position: fixed" class="logo">
+    ${{stock}}
+</div>
+<br>
+<br>
+<br>
+<br>
+<br>
+<div class="tweets">
+
+</div>
+<div id="tweets">
+    {{#each tweet.statuses}}
+    <blockquote class="twitter-tweet">
+        <p lang="en" dir="ltr">
+        </p>
+        <a href="https://twitter.com/{{this.retweeted_status.user.screen_name}}/status/{{this.retweeted_status.id_str}}"></a>
+    </blockquote>
+    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    {{/each}}
 </div>
 <canvas id="myChart" width="400px" height="400px"></canvas>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br> <br><br><br><br><br><br><br><br><br><br><br><br>
+<h3 style="position:fixed">{{tweet.average}}</h3>
+
 <div id="results"></div>
 <script type="text/javascript" src="javascripts/stocks.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.bundle.min.js"></script>
@@ -94,7 +127,6 @@
             }
         });
     })
-    document.getElementById("inp").addEventListener('change', search);
     function search(event) {
         let input = document.getElementById("results");
         if (document.getElementById("inp").value.length < 3) return;

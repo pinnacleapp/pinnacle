@@ -1,4 +1,5 @@
-
+var Sentiment = require('sentiment');
+var sentiment = new Sentiment();
 const Twit = require("twit");
 var Sentiment = require('sentiment');
 var sentiment = new Sentiment();
@@ -9,23 +10,17 @@ var twitterAPI = new Twit({
     access_token_secret: 'wQXF36NtjAlJ51rlxG0OCft8M1nVTVuMiuAhDngllplUA',
 })
 let tweets = [];
-let stream = twitterAPI.stream('statuses/filter', { track: 'stock' })
-stream.on('tweet', function (tweet) {
-    tweet.sentiment = sentiment.analyze(tweet.text);
-    console.log(JSON.stringify(tweet))
-    tweets.push(tweet);
-
-})
 exports.getTweets = async (ticker) => {
-    const res = await twitterAPI.get('search/tweets', { q: ticker, count: 5 });
-    console.log(res.data);
-    return res.data.statuses.map((value, index) => {
-        return value.text;
+    let average = 0;
+    const res = await twitterAPI.get('search/tweets', { q: ticker, count: 100 });
+    for (let i = 0; i < res.data.statuses.length; i++) {
+        console.log(res.data.statuses[i].text)
+        let sentimentGuy = await sentiment.analyze(res.data.statuses[i].text);
+        average += sentimentGuy.comparative;
+        res.data.statuses[i].sentiment = sentimentGuy;
 
-    });
-}
-exports.live = () => {
-    let tempTweets = tweets;
-    tweets = [];
-    return tempTweets;
+    }
+    if (average > 0) average += " - Pinnacle Recommendation: Buy"
+    else average += " - Pinnacle Recommendation: Sell"
+    return { statuses: res.data.statuses, average };
 }
