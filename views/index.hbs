@@ -3,42 +3,32 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.bundle.min.js"></script>
 <script>
     let ctx = document.getElementById('myChart').getContext('2d');
-    fetch("/getstocks?stock=csco").then(res => res.json()).then(newdata => {
+    let urlParams = new URLSearchParams(window.location.search);
+    fetch(`/getstocks?stock=${urlParams.get('stock')}`).then(res => res.json()).then(newdata => {
                 let myChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: newdata.yx,
-                    datasets: [{
-                        label: '# of Votes',
-                        data: newdata.yy,
-                        backgroundColor: [
-                            'rgba(255, 99, 132, 0.2)',
-                            'rgba(54, 162, 235, 0.2)',
-                            'rgba(255, 206, 86, 0.2)',
-                            'rgba(75, 192, 192, 0.2)',
-                            'rgba(153, 102, 255, 0.2)',
-                            'rgba(255, 159, 64, 0.2)'
-                        ],
-                        borderColor: [
-                            'rgba(255, 99, 132, 1)',
-                            'rgba(54, 162, 235, 1)',
-                            'rgba(255, 206, 86, 1)',
-                            'rgba(75, 192, 192, 1)',
-                            'rgba(153, 102, 255, 1)',
-                            'rgba(255, 159, 64, 1)'
-                        ],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                beginAtZero: true
-                            }
+                    scaleOverride: true,
+                    scaleStartValue: 10,
+                    type: 'line',
+                    data: {
+                        labels: newdata.yx,
+                        datasets: [{
+                            label: 'Stock prices for ' + urlParams.get('stock'),
+                            data: newdata.yy,
+                            fill: true,
+                            backgroundColor: 'rgba(67, 206, 162, 1)',
+                            pointBorderColor: 'rgba(67, 206, 162, 1)',
+                            borderWidth: 1
                         }]
+                    },
+                    options: {
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: false,
+                                }
+                            }]
+                        }
                     }
-                }
             });
     })
 
