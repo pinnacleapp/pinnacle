@@ -20,6 +20,7 @@ exports.getTweets = async (ticker) => {
         res.data.statuses[i].sentiment = sentimentGuy;
 
     }
+    average -= 2;
     if (average > 0) average += " - Pinnacle Recommendation: Buy"
     else average += " - Pinnacle Recommendation: Sell"
     return { statuses: res.data.statuses, average };
