@@ -3,9 +3,11 @@ var router = express.Router();
 const moment = require('moment')
 const alpha = require('alphavantage')({ key: "0HPBN1UWP7ZZNIGS" })
 const https = require('https');
+//const tweetUtil = require('../controllers/tweet');
+
 
 router.get('/', (req, res, next) => {
-  res.render("index", { title: "raw"  });
+  res.render("index", { title: "raw" });
 })
 router.get('/getstocks', function(req, res, next) {
   let stockData = {}
@@ -56,5 +58,9 @@ router.get('/getstocks', function(req, res, next) {
   });
 
 });
+
+router.get("/stock", (req, res, next) => {
+  res.render("stock", { stock: req.query.stock });
+})
 
 module.exports = router;
