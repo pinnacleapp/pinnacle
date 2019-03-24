@@ -1,12 +1,8 @@
-var express = require('express');
-var router = express.Router();
 const moment = require('moment')
-const alpha = require('alphavantage')({ key: "0HPBN1UWP7ZZNIGS" })
-const https = require('https');
+const alpha = require('alphavantage')({key: '9322BZUXBXU4IQMF'});
 router.get('/', function(req, res, next) {
   let stockData = {}
-  console.log(req.query.stock);
-  alpha.data.intraday(req.query.stock).then(data => {
+  alpha.data.intraday(req.query.stock, 'full', 'json', '30').then(data => {
     stockData.intraday = alpha.util.polish(data);
     stockData.y = []
     stockData.x = []
@@ -44,8 +40,8 @@ router.get('/', function(req, res, next) {
         stockData.weeklyy.reverse()
         stockData.yx = stockData.weeklyx.slice(-52)
         stockData.yy = stockData.weeklyy.slice(-52)
-        delete stockData.intraday;
-        res.json({yx: stockData.yx, yy: stockData.yy});
+        delete stockData.intraday
+        res.send(stockData)
       });
     });
 
