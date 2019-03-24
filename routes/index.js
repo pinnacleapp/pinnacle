@@ -3,7 +3,11 @@ var router = express.Router();
 const moment = require('moment')
 const alpha = require('alphavantage')({ key: "0HPBN1UWP7ZZNIGS" })
 const https = require('https');
-router.get('/', function(req, res, next) {
+
+router.get('/', (req, res, next) => {
+  res.render("index", { title: "raw"  });
+})
+router.get('/getstocks', function(req, res, next) {
   let stockData = {}
   console.log(req.query.stock);
   alpha.data.intraday(req.query.stock).then(data => {
