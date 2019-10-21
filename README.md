@@ -1,2 +1,2 @@
 # pinnacle
-Pinnacle for LA Hacks
+Pinnacle for LA Hacks 2019
